@@ -1,0 +1,58 @@
+create table proveedores (
+	id serial primary key,
+	nombre_proveedor varchar(100) not null,
+	nit_proveedor varchar(20) unique not null,
+	telefono_proveedor varchar(20),
+	email_proveedor varchar(100) unique,
+	ciudad_proveedor varchar(100),
+	pais_proveedor varchar(100) not null
+);
+
+create table categorias (
+	id serial primary key,
+	nombre_categoria varchar(100) not null
+);
+
+create table sub_categorias (
+	id serial primary key,
+	nombre_sub_categoria varchar(100) not null,
+	id_categoria int not null,
+	foreign key (id_categoria) references categorias(id)
+);
+
+create table bodegas (
+	id serial primary key,
+	nombre_bodega varchar(100) unique not null
+);
+
+create table unidades_medidas (
+	id serial primary key,
+	unidad_medida varchar(50) unique not null,
+	abreviatura VARCHAR(10) unique not null
+);
+
+create table productos(
+	id serial primary key,
+	nombre_producto varchar(100) unique not null,
+	descripcion_producto varchar(100),
+	unidades_medidas int not null,
+	precio_unitario numeric(10,2) not null ,
+	id_sub_categoria int not null,
+	foreign key (id_sub_categoria) references sub_categorias(id),
+	foreign key (id_unidad_medida) references unidades_medidas(id)
+	);
+
+
+create table compras(
+    id_registro SERIAL PRIMARY KEY,
+    fecha_compra DATE NOT NULL,
+    id_producto INT NOT NULL,
+    id_proveedor INT NOT NULL,
+    cantidad_comprada INT NOT NULL,
+    valor_total_compra NUMERIC(10,2) NOT NULL,
+    id_bodega INT NOT NULL,
+
+    FOREIGN KEY (id_producto) REFERENCES productos(id),
+    FOREIGN KEY (id_proveedor) REFERENCES proveedores(id),
+    FOREIGN KEY (id_bodega) REFERENCES bodegas(id)
+);
