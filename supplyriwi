@@ -1,69 +1,139 @@
+
+CREATE TABLE ciudades (
+    id_ciudad SERIAL PRIMARY KEY,
+    nombre_ciudad VARCHAR(100) NOT NULL,
+    pais VARCHAR(100) NOT NULL
+);
+
 CREATE TABLE proveedores (
-    id SERIAL PRIMARY KEY,
+    id_proveedor SERIAL PRIMARY KEY,
     nombre_proveedor VARCHAR(100) NOT NULL,
     nit_proveedor VARCHAR(20) UNIQUE NOT NULL,
     telefono_proveedor VARCHAR(20),
     email_proveedor VARCHAR(100) UNIQUE,
-    ciudad_proveedor VARCHAR(100),
-    pais_proveedor VARCHAR(100) NOT NULL
+    id_ciudad INT NOT NULL,
+
+    CONSTRAINT fk_proveedor_ciudad
+        FOREIGN KEY (id_ciudad)
+        REFERENCES ciudades(id_ciudad)
 );
+
+
 
 CREATE TABLE categorias (
-    id SERIAL PRIMARY KEY,
-    nombre_categoria VARCHAR(100) NOT NULL
+    id_categoria SERIAL PRIMARY KEY,
+    nombre_categoria VARCHAR(100) UNIQUE NOT NULL
 );
+
+
 
 CREATE TABLE sub_categorias (
-    id SERIAL PRIMARY KEY,
-    nombre_sub_categoria VARCHAR(100) NOT NULL,
+    id_sub_categoria SERIAL PRIMARY KEY,
+    nombre_sub_categoria VARCHAR(100) UNIQUE NOT NULL,
     id_categoria INT NOT NULL,
 
-    FOREIGN KEY (id_categoria)
-        REFERENCES categorias(id)
+    CONSTRAINT fk_subcategoria_categoria
+        FOREIGN KEY (id_categoria)
+        REFERENCES categorias(id_categoria)
 );
 
-CREATE TABLE bodegas (
-    id SERIAL PRIMARY KEY,
-    nombre_bodega VARCHAR(100) UNIQUE NOT NULL
-);
 
 
 CREATE TABLE unidades_medidas (
-    id SERIAL PRIMARY KEY,
+    id_unidad_medida SERIAL PRIMARY KEY,
     unidad_medida VARCHAR(50) UNIQUE NOT NULL,
     abreviatura VARCHAR(10) UNIQUE NOT NULL
 );
 
-CREATE TABLE productos (
-    id SERIAL PRIMARY KEY,
-    nombre_producto VARCHAR(100) UNIQUE NOT NULL,
-    descripcion_producto VARCHAR(100),
-    id_unidad_medida INT NOT NULL,
-    precio_unitario NUMERIC(10,2) NOT NULL,
-    id_sub_categoria INT NOT NULL,
 
-    FOREIGN KEY (id_unidad_medida)
-        REFERENCES unidades_medidas(id),
 
-    FOREIGN KEY (id_sub_categoria)
-        REFERENCES sub_categorias(id)
+CREATE TABLE bodegas (
+    id_bodega SERIAL PRIMARY KEY,
+    nombre_bodega VARCHAR(100) UNIQUE NOT NULL
 );
 
+
+
+CREATE TABLE productos (
+    id_producto SERIAL PRIMARY KEY,
+    nombre_producto VARCHAR(100) UNIQUE NOT NULL,
+    descripcion_producto TEXT,
+    precio_unitario NUMERIC(10,2) NOT NULL CHECK (precio_unitario > 0),
+
+    id_sub_categoria INT NOT NULL,
+    id_unidad_medida INT NOT NULL,
+
+    CONSTRAINT fk_producto_subcategoria
+        FOREIGN KEY (id_sub_categoria)
+        REFERENCES sub_categorias(id_sub_categoria),
+
+    CONSTRAINT fk_producto_unidad
+        FOREIGN KEY (id_unidad_medida)
+        REFERENCES unidades_medidas(id_unidad_medida)
+);
+
+
+
 CREATE TABLE compras (
-    id_registro SERIAL PRIMARY KEY,
+    id_compra SERIAL PRIMARY KEY,
     fecha_compra DATE NOT NULL,
-    id_producto INT NOT NULL,
     id_proveedor INT NOT NULL,
-    cantidad_comprada INT NOT NULL,
-    valor_total_compra NUMERIC(10,2) NOT NULL,
+
+    CONSTRAINT fk_compra_proveedor
+        FOREIGN KEY (id_proveedor)
+        REFERENCES proveedores(id_proveedor)
+);
+
+
+
+CREATE TABLE detalle_compras (
+    id_detalle SERIAL PRIMARY KEY,
+
+    id_compra INT NOT NULL,
+    id_producto INT NOT NULL,
     id_bodega INT NOT NULL,
 
-    FOREIGN KEY (id_producto)
-        REFERENCES productos(id),
+    cantidad INT NOT NULL CHECK(cantidad > 0),
 
-    FOREIGN KEY (id_proveedor)
-        REFERENCES proveedores(id),
+    precio_compra NUMERIC(10,2) NOT NULL CHECK(precio_compra > 0),
 
-    FOREIGN KEY (id_bodega)
-        REFERENCES bodegas(id)
+    subtotal NUMERIC(12,2) NOT NULL CHECK(subtotal >= 0),
+
+    CONSTRAINT fk_detalle_compra
+        FOREIGN KEY(id_compra)
+        REFERENCES compras(id_compra),
+
+    CONSTRAINT fk_detalle_producto
+        FOREIGN KEY(id_producto)
+        REFERENCES productos(id_producto),
+
+    CONSTRAINT fk_detalle_bodega
+        FOREIGN KEY(id_bodega)
+        REFERENCES bodegas(id_bodega)
+);
+
+
+CREATE TABLE movimientos_inventario (
+
+    id_movimiento SERIAL PRIMARY KEY,
+
+    fecha_movimiento DATE NOT NULL,
+
+    tipo_movimiento VARCHAR(10)
+    CHECK(tipo_movimiento IN ('ENTRADA','SALIDA')),
+
+    cantidad INT NOT NULL
+    CHECK(cantidad>0),
+
+    id_producto INT NOT NULL,
+
+    id_bodega INT NOT NULL,
+
+    CONSTRAINT fk_mov_producto
+        FOREIGN KEY(id_producto)
+        REFERENCES productos(id_producto),
+
+    CONSTRAINT fk_mov_bodega
+        FOREIGN KEY(id_bodega)
+        REFERENCES bodegas(id_bodega)
 );
