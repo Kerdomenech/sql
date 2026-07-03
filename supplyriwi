@@ -1,49 +1,55 @@
-create table proveedores (
-	id serial primary key,
-	nombre_proveedor varchar(100) not null,
-	nit_proveedor varchar(20) unique not null,
-	telefono_proveedor varchar(20),
-	email_proveedor varchar(100) unique,
-	ciudad_proveedor varchar(100),
-	pais_proveedor varchar(100) not null
+CREATE TABLE proveedores (
+    id SERIAL PRIMARY KEY,
+    nombre_proveedor VARCHAR(100) NOT NULL,
+    nit_proveedor VARCHAR(20) UNIQUE NOT NULL,
+    telefono_proveedor VARCHAR(20),
+    email_proveedor VARCHAR(100) UNIQUE,
+    ciudad_proveedor VARCHAR(100),
+    pais_proveedor VARCHAR(100) NOT NULL
 );
 
-create table categorias (
-	id serial primary key,
-	nombre_categoria varchar(100) not null
+CREATE TABLE categorias (
+    id SERIAL PRIMARY KEY,
+    nombre_categoria VARCHAR(100) NOT NULL
 );
 
-create table sub_categorias (
-	id serial primary key,
-	nombre_sub_categoria varchar(100) not null,
-	id_categoria int not null,
-	foreign key (id_categoria) references categorias(id)
+CREATE TABLE sub_categorias (
+    id SERIAL PRIMARY KEY,
+    nombre_sub_categoria VARCHAR(100) NOT NULL,
+    id_categoria INT NOT NULL,
+
+    FOREIGN KEY (id_categoria)
+        REFERENCES categorias(id)
 );
 
-create table bodegas (
-	id serial primary key,
-	nombre_bodega varchar(100) unique not null
+CREATE TABLE bodegas (
+    id SERIAL PRIMARY KEY,
+    nombre_bodega VARCHAR(100) UNIQUE NOT NULL
 );
 
-create table unidades_medidas (
-	id serial primary key,
-	unidad_medida varchar(50) unique not null,
-	abreviatura VARCHAR(10) unique not null
+
+CREATE TABLE unidades_medidas (
+    id SERIAL PRIMARY KEY,
+    unidad_medida VARCHAR(50) UNIQUE NOT NULL,
+    abreviatura VARCHAR(10) UNIQUE NOT NULL
 );
 
-create table productos(
-	id serial primary key,
-	nombre_producto varchar(100) unique not null,
-	descripcion_producto varchar(100),
-	unidades_medidas int not null,
-	precio_unitario numeric(10,2) not null ,
-	id_sub_categoria int not null,
-	foreign key (id_sub_categoria) references sub_categorias(id),
-	foreign key (id_unidad_medida) references unidades_medidas(id)
-	);
+CREATE TABLE productos (
+    id SERIAL PRIMARY KEY,
+    nombre_producto VARCHAR(100) UNIQUE NOT NULL,
+    descripcion_producto VARCHAR(100),
+    id_unidad_medida INT NOT NULL,
+    precio_unitario NUMERIC(10,2) NOT NULL,
+    id_sub_categoria INT NOT NULL,
 
+    FOREIGN KEY (id_unidad_medida)
+        REFERENCES unidades_medidas(id),
 
-create table compras(
+    FOREIGN KEY (id_sub_categoria)
+        REFERENCES sub_categorias(id)
+);
+
+CREATE TABLE compras (
     id_registro SERIAL PRIMARY KEY,
     fecha_compra DATE NOT NULL,
     id_producto INT NOT NULL,
@@ -52,7 +58,12 @@ create table compras(
     valor_total_compra NUMERIC(10,2) NOT NULL,
     id_bodega INT NOT NULL,
 
-    FOREIGN KEY (id_producto) REFERENCES productos(id),
-    FOREIGN KEY (id_proveedor) REFERENCES proveedores(id),
-    FOREIGN KEY (id_bodega) REFERENCES bodegas(id)
+    FOREIGN KEY (id_producto)
+        REFERENCES productos(id),
+
+    FOREIGN KEY (id_proveedor)
+        REFERENCES proveedores(id),
+
+    FOREIGN KEY (id_bodega)
+        REFERENCES bodegas(id)
 );
