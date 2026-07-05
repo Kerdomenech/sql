@@ -558,3 +558,95 @@ ON co.id_proveedor=pr.id_proveedor
 INNER JOIN productos pd
 ON dc.id_producto=pd.id_producto
 ORDER BY co.id_compra;
+
+
+/*=========================================
+ UPDATE
+ Actualizar el precio de un producto
+=========================================*/
+
+UPDATE productos
+SET precio_unitario = 45000
+WHERE nombre_producto = 'Cemento Gris';
+
+-- Verificar cambio
+SELECT * FROM productos
+WHERE nombre_producto = 'Cemento Gris';
+
+
+/*=========================================
+ DELETE
+ Eliminar un proveedor
+=========================================*/
+
+DELETE FROM proveedores
+WHERE nombre_proveedor = 'Metales Industriales';
+
+-- Verificar
+SELECT * FROM proveedores;
+
+
+/*=========================================
+ ALTER TABLE
+ Agregar columna marca
+=========================================*/
+
+ALTER TABLE productos
+ADD COLUMN marca VARCHAR(50);
+
+-- Verificar estructura
+SELECT * FROM productos;
+
+/*=========================================
+ CREATE VIEW
+ Vista de productos
+=========================================*/
+
+CREATE VIEW vista_productos AS
+
+SELECT
+    p.nombre_producto,
+    c.nombre_categoria,
+    s.nombre_sub_categoria,
+    p.precio_unitario
+FROM productos p
+INNER JOIN sub_categorias s
+    ON p.id_sub_categoria = s.id_sub_categoria
+INNER JOIN categorias c
+    ON s.id_categoria = c.id_categoria;
+
+
+
+/*=========================================
+ CREATE INDEX
+ Índice para búsqueda de productos
+=========================================*/
+
+CREATE INDEX idx_nombre_producto
+ON productos(nombre_producto);
+
+
+/*=========================================
+ TRANSACCIÓN CON COMMIT
+=========================================*/
+
+BEGIN;
+
+UPDATE productos
+SET precio_unitario = 48000
+WHERE nombre_producto = 'Cemento Gris';
+
+COMMIT;
+
+
+/*=========================================
+ TRANSACCIÓN CON ROLLBACK
+=========================================*/
+
+BEGIN;
+
+UPDATE productos
+SET precio_unitario = 1000000
+WHERE nombre_producto = 'Cemento Gris';
+
+ROLLBACK;
