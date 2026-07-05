@@ -1,102 +1,318 @@
 # 📦 Proyecto de Normalización de Base de Datos en SQL
 
-## Descripción
+# Inventory Management Database
 
-Este proyecto consiste en la limpieza, normalización e implementación de una base de datos de compras utilizando PostgreSQL. La base de datos fue diseñada a partir de un conjunto de datos con inconsistencias, aplicando las tres primeras formas normales (1FN, 2FN y 3FN) para mejorar la integridad y reducir la redundancia.
+## Project Description
 
-## Objetivos
+This project consists of the design and implementation of a relational database for an inventory management system. The database allows managing suppliers, products, warehouses, purchases, inventory movements, categories, and units of measure. The objective is to guarantee data integrity, optimize inventory control, and facilitate business decision-making through SQL queries.
 
-- Identificar inconsistencias en la base de datos original.
-- Estandarizar los datos.
-- Aplicar el proceso de normalización.
-- Crear una base de datos relacional en PostgreSQL.
-- Establecer relaciones mediante claves primarias y foráneas.
+---
 
-## Inconsistencias encontradas
-
-Durante el análisis de la base de datos se identificaron las siguientes inconsistencias:
-
-- Registros duplicados de proveedores.
-- Categorías y subcategorías repetidas.
-- Diferentes formatos de fecha.
-- Redundancia de información en productos y proveedores.
-- Unidades de medida almacenadas como texto repetitivo.
-- Falta de integridad referencial.
-
-## Soluciones implementadas
-
-Para solucionar las inconsistencias se realizaron las siguientes acciones:
-
-- Creación de tablas independientes para proveedores, categorías, subcategorías, productos, bodegas y unidades de medida.
-- Uso de claves primarias (`PRIMARY KEY`) para identificar cada registro.
-- Implementación de claves foráneas (`FOREIGN KEY`) para relacionar las tablas.
-- Estandarización de los tipos de datos.
-- Eliminación de información redundante.
-
-## Modelo de la base de datos
-
-La base de datos está conformada por las siguientes tablas:
-
-- Proveedores
-- Categorías
-- Subcategorías
-- Unidades de medida
-- Productos
-- Bodegas
-- Compras
-
-### Relaciones
-
-- Una categoría puede tener muchas subcategorías.
-- Una subcategoría puede tener muchos productos.
-- Una unidad de medida puede estar asociada a varios productos.
-- Un proveedor puede registrar muchas compras.
-- Un producto puede aparecer en muchas compras.
-- Una bodega puede almacenar muchas compras.
-
-## Tecnologías utilizadas
+## Technologies Used
 
 - PostgreSQL
-- pgAdmin 4
 - SQL
+- pgAdmin 4
+- Git
+- GitHub
 
-## Estructura del proyecto
+---
 
-```
-Proyecto_SQL/
-│
-├── README.md
-├── script.sql
-├── modelo_relacional.png
-├── base_datos.xlsx
-└── evidencias/
-```
+## Database Engine
 
-## Cómo ejecutar el proyecto
+PostgreSQL 17
 
-1. Crear una base de datos en PostgreSQL.
-2. Abrir pgAdmin.
-3. Ejecutar el archivo `script.sql`.
-4. Insertar los datos mediante los comandos `INSERT INTO`.
-5. Verificar las relaciones entre las tablas.
+---
 
-## Normalización aplicada
+## Normalization Process
 
-### Primera Forma Normal (1FN)
+The database was normalized up to the Third Normal Form (3NF).
 
-- Eliminación de grupos repetitivos.
-- Cada columna almacena un único valor.
+### First Normal Form (1NF)
 
-### Segunda Forma Normal (2FN)
+- Atomic values.
+- No repeating groups.
+- Primary keys defined for every table.
 
-- Separación de entidades como proveedores, productos y categorías.
+### Second Normal Form (2NF)
 
-### Tercera Forma Normal (3FN)
+- Partial dependencies were removed.
+- All non-key attributes depend on the whole primary key.
 
-- Eliminación de dependencias transitivas mediante tablas relacionadas.
+### Third Normal Form (3NF)
 
-## Autora
+- Transitive dependencies were eliminated.
+- Independent tables were created for:
+  - Cities
+  - Categories
+  - Subcategories
+  - Units of Measure
 
-**Kerlys Bello D.**
+---
 
-Proyecto desarrollado para la asignatura de **Desarrollo de Software (SQL)**.
+## Database Structure
+
+The project contains the following tables:
+
+- ciudades
+- proveedores
+- categorias
+- sub_categorias
+- unidades_medidas
+- productos
+- bodegas
+- compras
+- detalle_compras
+- movimientos_inventario
+
+---
+
+## Entity Relationship Model
+
+The Entity Relationship Model (ERM) defines the relationships between products, suppliers, warehouses, purchases, and inventory movements using primary and foreign keys.
+
+---
+
+## Installation Instructions
+
+1. Install PostgreSQL.
+2. Install pgAdmin 4.
+3. Create a new database.
+4. Execute the SQL script.
+5. Run the INSERT statements.
+6. Execute the SQL queries.
+
+---
+
+## Database Creation
+
+The database was created using SQL DDL statements:
+
+- CREATE DATABASE
+- CREATE TABLE
+- PRIMARY KEY
+- FOREIGN KEY
+- UNIQUE
+- CHECK
+- NOT NULL
+
+---
+
+## Data Loading Process
+
+The database was populated manually using SQL INSERT INTO statements while respecting all integrity constraints.
+
+---
+
+## SQL Queries Explanation
+
+The project includes SQL queries that allow:
+
+- Inventory available by product.
+- Products stored in each warehouse.
+- Total purchases by supplier.
+- Products with the lowest stock.
+- Five most purchased products.
+- Inventory value by city.
+- JOIN operations.
+- Aggregate functions.
+- Business reports.
+
+---
+
+## Developer Information
+
+**Full Name:** Kerlys Bello D.
+
+**Clan:** __________________
+
+2. Explicación de la normalización
+
+Puedes poner esto en el informe o después del README.
+
+Primera Forma Normal (1FN)
+Cada tabla posee una clave primaria.
+No existen grupos repetitivos.
+Todos los atributos contienen valores atómicos.
+
+Ejemplo:
+
+❌ Incorrecto
+
+Producto	Teléfonos
+Martillo	3001,3002
+
+✅ Correcto
+
+Producto	Teléfono
+Martillo	3001
+Martillo	3002
+Segunda Forma Normal (2FN)
+
+Todos los atributos dependen completamente de la clave primaria.
+
+Ejemplo:
+
+La información del proveedor se separó de la tabla de compras.
+
+Antes
+
+Compras
+
+Proveedor
+Teléfono
+Dirección
+Producto
+Cantidad
+
+Después
+
+Proveedores
+
+Compras
+Tercera Forma Normal (3FN)
+
+Se eliminaron dependencias transitivas.
+
+Ejemplo
+
+Antes
+
+Producto
+Categoría
+Subcategoría
+
+Después
+
+Categorias
+
+↓
+
+Subcategorias
+
+↓
+
+Productos
+
+Esto evita duplicidad de información.
+
+3. Modelo Entidad Relación (MER)
+
+El MER de tu proyecto quedaría aproximadamente así:
+
+                    CIUDADES
+                  id_ciudad (PK)
+                        │
+                        │ 1:N
+                        │
+                PROVEEDORES
+              id_proveedor (PK)
+                        │
+                        │ 1:N
+                        │
+                  COMPRAS
+                id_compra (PK)
+                        │
+                        │ 1:N
+                        │
+              DETALLE_COMPRAS
+                        │
+          ┌─────────────┴─────────────┐
+          │                           │
+          │ N:1                       │ N:1
+          │                           │
+      PRODUCTOS                  BODEGAS
+  id_producto (PK)            id_bodega (PK)
+          │
+          │ N:1
+          │
+ SUB_CATEGORIAS
+ id_sub_categoria (PK)
+          │
+          │ N:1
+          │
+   CATEGORIAS
+ id_categoria (PK)
+
+PRODUCTOS
+      │
+      │ N:1
+      │
+UNIDADES_MEDIDAS
+
+PRODUCTOS
+      │
+      │ 1:N
+      │
+MOVIMIENTOS_INVENTARIO
+4. Modelo Relacional
+CIUDADES
+---------
+id_ciudad (PK)
+nombre_ciudad
+pais
+
+PROVEEDORES
+------------
+id_proveedor (PK)
+nombre_proveedor
+nit
+telefono
+email
+id_ciudad (FK)
+
+CATEGORIAS
+------------
+id_categoria (PK)
+nombre_categoria
+
+SUB_CATEGORIAS
+---------------
+id_sub_categoria (PK)
+nombre_sub_categoria
+id_categoria (FK)
+
+UNIDADES_MEDIDAS
+-----------------
+id_unidad_medida (PK)
+unidad_medida
+abreviatura
+
+PRODUCTOS
+-----------
+id_producto (PK)
+nombre_producto
+descripcion
+precio_unitario
+id_sub_categoria (FK)
+id_unidad_medida (FK)
+
+BODEGAS
+---------
+id_bodega (PK)
+nombre_bodega
+
+COMPRAS
+---------
+id_compra (PK)
+fecha_compra
+id_proveedor (FK)
+
+DETALLE_COMPRAS
+----------------
+id_detalle (PK)
+id_compra (FK)
+id_producto (FK)
+id_bodega (FK)
+cantidad
+precio_compra
+subtotal
+
+MOVIMIENTOS_INVENTARIO
+-----------------------
+id_movimiento (PK)
+fecha_movimiento
+tipo_movimiento
+cantidad
+id_producto (FK)
+id_bodega (FK)
