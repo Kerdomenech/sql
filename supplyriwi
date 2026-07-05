@@ -1,8 +1,12 @@
+/*ciudades*/
+
 CREATE TABLE ciudades (
     id_ciudad SERIAL PRIMARY KEY,
     nombre_ciudad VARCHAR(100) NOT NULL,
     pais VARCHAR(100) NOT NULL
 );
+
+/*tabla de pedidos*/
 
 CREATE TABLE proveedores (
     id_proveedor SERIAL PRIMARY KEY,
@@ -17,14 +21,14 @@ CREATE TABLE proveedores (
         REFERENCES ciudades(id_ciudad)
 );
 
-
+/*categorias*/
 
 CREATE TABLE categorias (
     id_categoria SERIAL PRIMARY KEY,
     nombre_categoria VARCHAR(100) UNIQUE NOT NULL
 );
 
-
+/*sub_cate*/
 
 CREATE TABLE sub_categorias (
     id_sub_categoria SERIAL PRIMARY KEY,
@@ -37,7 +41,7 @@ CREATE TABLE sub_categorias (
         REFERENCES categorias(id_categoria)
 );
 
-
+/*unidades*/
 
 CREATE TABLE unidades_medidas (
     id_unidad_medida SERIAL PRIMARY KEY,
@@ -45,7 +49,7 @@ CREATE TABLE unidades_medidas (
     abreviatura VARCHAR(10) UNIQUE NOT NULL
 );
 
-
+/*producto*/
 
 CREATE TABLE productos (
     id_producto SERIAL PRIMARY KEY,
@@ -63,14 +67,14 @@ CREATE TABLE productos (
 
     CONSTRAINT fk_producto_subcategoria
         FOREIGN KEY(id_sub_categoria)
-        REFERENCES sub_categorias(id),
+        REFERENCES sub_categorias(id_sub_categoria),
 
     CONSTRAINT fk_producto_unidad
         FOREIGN KEY(id_unidad_medida)
         REFERENCES unidades_medidas(id_unidad_medida)
 );
 
-
+/*bodegas*/
 
 CREATE TABLE bodegas (
 
@@ -85,7 +89,7 @@ CREATE TABLE bodegas (
     responsable_bodega VARCHAR(100)
 );
 
-
+/*compras*/
 
 CREATE TABLE compras (
 
@@ -100,7 +104,7 @@ CREATE TABLE compras (
         REFERENCES proveedores(id_proveedor)
 );
 
-
+/*detalles_compra*/
 
 CREATE TABLE detalle_compras (
 
@@ -131,10 +135,10 @@ CREATE TABLE detalle_compras (
 
     CONSTRAINT fk_detalle_bodega
         FOREIGN KEY(id_bodega)
-        REFERENCES bodegas(id)
+        REFERENCES bodegas(id_bodega)
 );
 
-
+/*movi_inven*/
 
 CREATE TABLE movimientos_inventario (
 
@@ -160,6 +164,397 @@ CREATE TABLE movimientos_inventario (
 
     CONSTRAINT fk_mov_bodega
         FOREIGN KEY(id_bodega)
-        REFERENCES bodegas(id)
+        REFERENCES bodegas(id_bodega)
 );
 
+
+/*inserto's*/
+
+
+INSERT INTO ciudades (nombre_ciudad, pais)
+VALUES
+('Barranquilla', 'Colombia'),
+('Bogotá', 'Colombia'),
+('Medellín', 'Colombia'),
+('Cali', 'Colombia'),
+('Bucaramanga', 'Colombia');
+
+
+SELECT * FROM ciudades;
+
+
+INSERT INTO categorias (nombre_categoria)
+VALUES
+('Ferretería'),
+('Electrónica'),
+('Plomería'),
+('Pinturas'),
+('Metales'),
+('Eléctrico'),
+('Construcción');
+
+SELECT * FROM categorias;
+
+INSERT INTO sub_categorias (nombre_sub_categoria, id_categoria)
+VALUES
+('Tornillos',1),
+('Herramientas Manuales',1),
+
+('Redes',2),
+('Componentes',2),
+
+('Tuberías',3),
+('Válvulas',3),
+
+('Esmaltes',4),
+('Rodillos',4),
+
+('Perfiles',5),
+('Láminas',5),
+
+('Interruptores',6),
+('Cableado',6),
+
+('Cementos',7),
+('Bloques',7);
+
+SELECT * FROM sub_categorias;
+
+INSERT INTO unidades_medidas (unidad_medida, abreviatura)
+VALUES
+('Unidad','und'),
+('Metro','m'),
+('Galón','gal'),
+('Bulto','bto'),
+('Caja','cj'),
+('Kilogramo','kg');
+
+SELECT * FROM unidades_medidas;
+
+INSERT INTO bodegas
+(nombre_bodega, ciudad_bodega, direccion_bodega, responsable_bodega)
+VALUES
+('Bodega Norte','Barranquilla','Cra 38 #74-25','Carlos Pérez'),
+('Bodega Centro','Bogotá','Calle 80 #20-15','María Gómez'),
+('Bodega Sur','Medellín','Cra 45 #10-80','Luis Ramírez');
+
+SELECT * FROM bodegas;
+
+INSERT INTO proveedores
+(nombre_proveedor, nit_proveedor, telefono_proveedor, email_proveedor, id_ciudad)
+VALUES
+('Ferretería El Constructor', '900123456', '3001234567', 'ventas@constructor.com', 1),
+('Electro Suministros', '901234567', '3102345678', 'contacto@electrosum.com', 2),
+('Plomería Total', '902345678', '3203456789', 'ventas@plomeriatotal.com', 3),
+('Pinturas ColorMax', '903456789', '3004567890', 'info@colormax.com', 4),
+('Metales Industriales', '904567890', '3115678901', 'ventas@metales.com', 5);
+
+SELECT * FROM proveedores;
+
+
+INSERT INTO productos
+(nombre_producto,
+descripcion_producto,
+precio_unitario,
+id_sub_categoria,
+id_unidad_medida)
+VALUES
+('Tornillo 3 pulgadas','Tornillo galvanizado',500,1,1),
+
+('Martillo de acero','Herramienta manual',35000,2,1),
+
+('Cable UTP Cat6','Cable de red',2500,3,2),
+
+('Interruptor sencillo','Interruptor eléctrico',8500,11,1),
+
+('Tubería PVC 2 pulgadas','Tubería sanitaria',42000,5,2),
+
+('Válvula de paso','Válvula PVC',18000,6,1),
+
+('Pintura blanca','Pintura interior',65000,7,3),
+
+('Perfil metálico','Perfil galvanizado',120000,9,2),
+
+('Cemento Gris','Bulto de cemento',42000,13,4);
+
+SELECT * FROM productos;
+
+
+
+INSERT INTO compras
+(fecha_compra,id_proveedor)
+VALUES
+('2025-01-10',1),
+('2025-01-15',2),
+('2025-02-01',3),
+('2025-02-10',4),
+('2025-03-05',5);
+
+SELECT * FROM compras;
+
+INSERT INTO detalle_compras
+(id_compra,
+id_producto,
+id_bodega,
+cantidad,
+precio_compra,
+subtotal)
+VALUES
+(1,1,1,500,500,250000),
+
+(1,2,1,20,35000,700000),
+
+(2,3,2,100,2500,250000),
+
+(3,5,3,30,42000,1260000),
+
+(4,7,2,15,65000,975000),
+
+(5,9,1,50,42000,2100000);
+
+SELECT * FROM movimientos_inventario;
+
+
+/*consultas*/
+
+/*=========================================================
+ CONSULTA 1
+ Inventario disponible por producto
+=========================================================*/
+
+SELECT
+    p.nombre_producto,
+    SUM(
+        CASE
+            WHEN m.tipo_movimiento = 'Entrada' THEN m.cantidad
+            WHEN m.tipo_movimiento = 'Salida' THEN -m.cantidad
+        END
+    ) AS inventario_disponible
+FROM productos p
+INNER JOIN movimientos_inventario m
+ON p.id_producto = m.id_producto
+GROUP BY p.nombre_producto
+ORDER BY inventario_disponible DESC;
+
+
+/*=========================================================
+ CONSULTA 2
+ Productos almacenados por bodega
+=========================================================*/
+
+SELECT
+    b.nombre_bodega,
+    p.nombre_producto,
+    SUM(
+        CASE
+            WHEN m.tipo_movimiento='Entrada' THEN m.cantidad
+            WHEN m.tipo_movimiento='Salida' THEN -m.cantidad
+        END
+    ) AS cantidad
+FROM movimientos_inventario m
+INNER JOIN productos p
+ON m.id_producto=p.id_producto
+INNER JOIN bodegas b
+ON m.id_bodega=b.id_bodega
+GROUP BY
+    b.nombre_bodega,
+    p.nombre_producto
+ORDER BY
+    b.nombre_bodega;
+
+
+/*=========================================================
+ CONSULTA 3
+ Total comprado por proveedor
+=========================================================*/
+
+SELECT
+    pr.nombre_proveedor,
+    SUM(dc.subtotal) AS total_comprado
+FROM proveedores pr
+INNER JOIN compras c
+ON pr.id_proveedor=c.id_proveedor
+INNER JOIN detalle_compras dc
+ON c.id_compra=dc.id_compra
+GROUP BY pr.nombre_proveedor
+ORDER BY total_comprado DESC;
+
+
+/*=========================================================
+ CONSULTA 4
+ Productos con menor existencia
+=========================================================*/
+
+SELECT
+    p.nombre_producto,
+    SUM(
+        CASE
+            WHEN m.tipo_movimiento='Entrada' THEN m.cantidad
+            WHEN m.tipo_movimiento='Salida' THEN -m.cantidad
+        END
+    ) AS existencia
+FROM productos p
+INNER JOIN movimientos_inventario m
+ON p.id_producto=m.id_producto
+GROUP BY p.nombre_producto
+ORDER BY existencia ASC
+LIMIT 5;
+
+
+/*=========================================================
+ CONSULTA 5
+ Cinco productos más comprados
+=========================================================*/
+
+SELECT
+    p.nombre_producto,
+    SUM(dc.cantidad) AS total_comprado
+FROM detalle_compras dc
+INNER JOIN productos p
+ON dc.id_producto=p.id_producto
+GROUP BY p.nombre_producto
+ORDER BY total_comprado DESC
+LIMIT 5;
+
+
+/*=========================================================
+ CONSULTA 6
+ Valor económico del inventario por ciudad
+=========================================================*/
+
+SELECT
+    b.ciudad_bodega,
+    SUM(
+        CASE
+            WHEN m.tipo_movimiento='Entrada'
+                THEN m.cantidad*p.precio_unitario
+            WHEN m.tipo_movimiento='Salida'
+                THEN -m.cantidad*p.precio_unitario
+        END
+    ) AS valor_inventario
+FROM movimientos_inventario m
+INNER JOIN productos p
+ON m.id_producto=p.id_producto
+INNER JOIN bodegas b
+ON m.id_bodega=b.id_bodega
+GROUP BY b.ciudad_bodega
+ORDER BY valor_inventario DESC;
+
+
+/*=========================================================
+ CONSULTA 7
+ Lista de productos con categoría y subcategoría
+=========================================================*/
+
+SELECT
+    p.nombre_producto,
+    c.nombre_categoria,
+    s.nombre_sub_categoria,
+    p.precio_unitario
+FROM productos p
+INNER JOIN sub_categorias s
+ON p.id_sub_categoria=s.id_sub_categoria
+INNER JOIN categorias c
+ON s.id_categoria=c.id_categoria;
+
+
+/*=========================================================
+ CONSULTA 8
+ Proveedores con ciudad
+=========================================================*/
+
+SELECT
+    pr.nombre_proveedor,
+    c.nombre_ciudad,
+    c.pais
+FROM proveedores pr
+INNER JOIN ciudades c
+ON pr.id_ciudad=c.id_ciudad;
+
+
+/*=========================================================
+ CONSULTA 9
+ Total de productos registrados
+=========================================================*/
+
+SELECT
+COUNT(*) AS total_productos
+FROM productos;
+
+
+/*=========================================================
+ CONSULTA 10
+ Precio promedio de los productos
+=========================================================*/
+
+SELECT
+AVG(precio_unitario) AS precio_promedio
+FROM productos;
+
+
+/*=========================================================
+ CONSULTA 11
+ Producto más costoso
+=========================================================*/
+
+SELECT
+nombre_producto,
+precio_unitario
+FROM productos
+ORDER BY precio_unitario DESC
+LIMIT 1;
+
+
+/*CONSULTA 12 .Producto más económico*/
+
+SELECT
+nombre_producto,
+precio_unitario
+FROM productos
+ORDER BY precio_unitario ASC
+LIMIT 1;
+
+
+/*CONSULTA 14.Cantidad de productos por categorí*/
+
+SELECT
+    c.nombre_categoria,
+    COUNT(*) AS cantidad
+FROM productos p
+INNER JOIN sub_categorias s
+ON p.id_sub_categoria=s.id_sub_categoria
+INNER JOIN categorias c
+ON s.id_categoria=c.id_categoria
+GROUP BY c.nombre_categoria
+ORDER BY cantidad DESC;
+
+/* CONSULTA 14.Compras realizadas con proveedor*/
+
+SELECT
+    co.id_compra,
+    co.fecha_compra,
+    pr.nombre_proveedor
+FROM compras co
+INNER JOIN proveedores pr
+ON co.id_proveedor=pr.id_proveedor
+ORDER BY co.fecha_compra;
+
+
+/*CONSULTA 15.Detalle completo de las compras*/
+
+SELECT
+    co.id_compra,
+    co.fecha_compra,
+    pr.nombre_proveedor,
+    pd.nombre_producto,
+    dc.cantidad,
+    dc.precio_compra,
+    dc.subtotal
+FROM detalle_compras dc
+INNER JOIN compras co
+ON dc.id_compra=co.id_compra
+INNER JOIN proveedores pr
+ON co.id_proveedor=pr.id_proveedor
+INNER JOIN productos pd
+ON dc.id_producto=pd.id_producto
+ORDER BY co.id_compra;
