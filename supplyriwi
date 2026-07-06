@@ -317,10 +317,7 @@ SELECT * FROM movimientos_inventario;
 
 /*consultas*/
 
-/*=========================================================
- CONSULTA 1
- Inventario disponible por producto
-=========================================================*/
+/*Consulta 1.Inventario disponible por producto*/
 
 SELECT
     p.nombre_producto,
@@ -337,10 +334,7 @@ GROUP BY p.nombre_producto
 ORDER BY inventario_disponible DESC;
 
 
-/*=========================================================
- CONSULTA 2
- Productos almacenados por bodega
-=========================================================*/
+/*CONSULTA 2. Productos almacenados por bodega*/
 
 SELECT
     b.nombre_bodega,
@@ -363,10 +357,7 @@ ORDER BY
     b.nombre_bodega;
 
 
-/*=========================================================
- CONSULTA 3
- Total comprado por proveedor
-=========================================================*/
+/*CONSULTA 3. Total comprado por proveedor*/
 
 SELECT
     pr.nombre_proveedor,
@@ -380,10 +371,7 @@ GROUP BY pr.nombre_proveedor
 ORDER BY total_comprado DESC;
 
 
-/*=========================================================
- CONSULTA 4
- Productos con menor existencia
-=========================================================*/
+/*CONSULTA 4.Productos con menor existencia*/
 
 SELECT
     p.nombre_producto,
@@ -401,10 +389,7 @@ ORDER BY existencia ASC
 LIMIT 5;
 
 
-/*=========================================================
- CONSULTA 5
- Cinco productos más comprados
-=========================================================*/
+/*CONSULTA 5.Cinco productos más comprados*/
 
 SELECT
     p.nombre_producto,
@@ -417,10 +402,7 @@ ORDER BY total_comprado DESC
 LIMIT 5;
 
 
-/*=========================================================
- CONSULTA 6
- Valor económico del inventario por ciudad
-=========================================================*/
+/*CONSULTA 6.Valor económico del inventario por ciudad*/
 
 SELECT
     b.ciudad_bodega,
@@ -441,10 +423,7 @@ GROUP BY b.ciudad_bodega
 ORDER BY valor_inventario DESC;
 
 
-/*=========================================================
- CONSULTA 7
- Lista de productos con categoría y subcategoría
-=========================================================*/
+/*CONSULTA 7.Lista de productos con categoría y subcategoría*/
 
 SELECT
     p.nombre_producto,
@@ -458,10 +437,7 @@ INNER JOIN categorias c
 ON s.id_categoria=c.id_categoria;
 
 
-/*=========================================================
- CONSULTA 8
- Proveedores con ciudad
-=========================================================*/
+/*CONSULTA 8.Proveedores con ciudad*/
 
 SELECT
     pr.nombre_proveedor,
@@ -472,30 +448,21 @@ INNER JOIN ciudades c
 ON pr.id_ciudad=c.id_ciudad;
 
 
-/*=========================================================
- CONSULTA 9
- Total de productos registrados
-=========================================================*/
+/*CONSULTA 9.Total de productos registrados*/
 
 SELECT
 COUNT(*) AS total_productos
 FROM productos;
 
 
-/*=========================================================
- CONSULTA 10
- Precio promedio de los productos
-=========================================================*/
+/*CONSULTA 10.Precio promedio de los productos*/
 
 SELECT
 AVG(precio_unitario) AS precio_promedio
 FROM productos;
 
 
-/*=========================================================
- CONSULTA 11
- Producto más costoso
-=========================================================*/
+/* CONSULTA 11.Producto más costoso*/
 
 SELECT
 nombre_producto,
@@ -560,10 +527,7 @@ ON dc.id_producto=pd.id_producto
 ORDER BY co.id_compra;
 
 
-/*=========================================
- UPDATE
- Actualizar el precio de un producto
-=========================================*/
+/*UPDATE. Actualizar el precio de un producto*/
 
 UPDATE productos
 SET precio_unitario = 45000
@@ -574,10 +538,7 @@ SELECT * FROM productos
 WHERE nombre_producto = 'Cemento Gris';
 
 
-/*=========================================
- DELETE
- Eliminar un proveedor
-=========================================*/
+/*DELETE. Eliminar un proveedor*/
 
 DELETE FROM proveedores
 WHERE nombre_proveedor = 'Metales Industriales';
@@ -586,10 +547,7 @@ WHERE nombre_proveedor = 'Metales Industriales';
 SELECT * FROM proveedores;
 
 
-/*=========================================
- ALTER TABLE
- Agregar columna marca
-=========================================*/
+/* ALTER TABLE.Agregar columna marca*/
 
 ALTER TABLE productos
 ADD COLUMN marca VARCHAR(50);
@@ -597,10 +555,7 @@ ADD COLUMN marca VARCHAR(50);
 -- Verificar estructura
 SELECT * FROM productos;
 
-/*=========================================
- CREATE VIEW
- Vista de productos
-=========================================*/
+/*CREATE VIEW.Vista de productos*/
 
 CREATE VIEW vista_productos AS
 
@@ -617,18 +572,13 @@ INNER JOIN categorias c
 
 
 
-/*=========================================
- CREATE INDEX
- Índice para búsqueda de productos
-=========================================*/
+/*CREATE INDEX.Índice para búsqueda de productos*/
 
 CREATE INDEX idx_nombre_producto
 ON productos(nombre_producto);
 
 
-/*=========================================
- TRANSACCIÓN CON COMMIT
-=========================================*/
+/*TRANSACCIÓN CON COMMIT*/
 
 BEGIN;
 
@@ -639,9 +589,7 @@ WHERE nombre_producto = 'Cemento Gris';
 COMMIT;
 
 
-/*=========================================
- TRANSACCIÓN CON ROLLBACK
-=========================================*/
+/*TRANSACCIÓN CON ROLLBACK*/
 
 BEGIN;
 
