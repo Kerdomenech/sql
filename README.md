@@ -126,7 +126,7 @@ The project includes SQL queries that allow:
 
 
 
-*2. Explicación de la normalización*
+* Explicación de la normalización* español
 
 
 
