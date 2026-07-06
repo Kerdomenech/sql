@@ -122,13 +122,13 @@ The project includes SQL queries that allow:
 
 ## Developer Information
 
-**Full Name:** Kerlys Bello D.
+**Full Name:** Kerlys Bello D. **MALECON**
 
-**Clan:** __________________
 
-2. Explicación de la normalización
 
-Puedes poner esto en el informe o después del README.
+*2. Explicación de la normalización*
+
+
 
 Primera Forma Normal (1FN)
 Cada tabla posee una clave primaria.
@@ -155,7 +155,7 @@ Ejemplo:
 
 La información del proveedor se separó de la tabla de compras.
 
-Antes
+*-Antes-*
 
 Compras
 
@@ -165,7 +165,7 @@ Dirección
 Producto
 Cantidad
 
-Después
+*-Después-*
 
 Proveedores
 
@@ -176,13 +176,13 @@ Se eliminaron dependencias transitivas.
 
 Ejemplo
 
-Antes
+*-Antes-*
 
 Producto
 Categoría
 Subcategoría
 
-Después
+*-Después-*
 
 Categorias
 
@@ -198,7 +198,7 @@ Esto evita duplicidad de información.
 
 3. Modelo Entidad Relación (MER)
 
-El MER de tu proyecto quedaría aproximadamente así:
+El MER del proyecto es así:
 
                     CIUDADES
                   id_ciudad (PK)
@@ -245,6 +245,9 @@ PRODUCTOS
       │ 1:N
       │
 MOVIMIENTOS_INVENTARIO
+
+
+
 4. Modelo Relacional
 CIUDADES
 ---------
